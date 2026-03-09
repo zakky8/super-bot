@@ -1,7 +1,0 @@
-# Verified: March 09, 2026 | Python 3.12
-aiogram==3.26.0
-discord.py==2.7.1
-anthropic==0.80.0
-python-dotenv==1.0.1
-aiohttp==3.11.0
-loguru==0.7.2

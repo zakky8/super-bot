@@ -329,7 +329,7 @@ export class AIService {
     const modelToUse = model ?? this.config.fallbackModel;
 
     const response = await this.ollama.chat({
-      model,
+      model: modelToUse,
       messages: messages.map((m) => ({ role: m.role, content: m.content })),
       options:  { temperature: this.config.temperature, num_predict: this.config.maxTokens },
     });

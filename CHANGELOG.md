@@ -5,6 +5,26 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.0.0] - 2026-03-10
+
+### Changed - Anthropic Claude AI Integration (Full Upgrade)
+- Replaced OpenRouter SDK with @anthropic-ai/sdk across shared, telegram-bot, discord-bot
+- Upgraded AIService: Anthropic Claude primary, Ollama fallback, same public interface
+- FAQ-based AI: loads faq_data.json, answers only from knowledge base
+- Prompt injection guard: 8 attack phrases blocked and logged
+- Human escalation: ESCALATE signal notifies moderator chat/channel
+- Conversation memory: last 10 turns per user in Redis (in-memory fallback)
+- Rate limiting: 20 req/hour per user, Redis-backed
+- Telegram /chat: escalation handling, long message chunking
+- Telegram /ask: fixed alias, proper AI response
+- Telegram /support: new command for direct human escalation
+- Telegram /aisetup: full rewrite for Anthropic - key, model, test, faq reload
+- Discord /chat: escalation embed, rate limit feedback
+- Added faq_data.json at repo root (shared by both bots)
+- Removed project1-support-bot/ - all features integrated into TypeScript system
+- Updated shared/tests/AIService.test.ts for Anthropic config
+- Simplified CI: one node-check job
+
 ## [2.5.0] - 2026-02-10
 
 ### Added - AI Integration 🧠
