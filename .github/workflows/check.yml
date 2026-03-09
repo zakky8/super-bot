@@ -27,6 +27,9 @@ jobs:
           npm ci
           npm run build
 
+      - name: Run shared tests
+        run: cd shared && npm test
+
       # Telegram bot
       - name: Cache telegram-bot/node_modules
         uses: actions/cache@v4
