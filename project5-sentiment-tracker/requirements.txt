@@ -1,0 +1,11 @@
+# Verified: March 09, 2026 | Python 3.12
+praw==7.7.1
+requests==2.32.3
+pandas==2.2.3
+streamlit==1.55.0
+plotly==5.24.1
+nltk==3.9.1
+vaderSentiment==3.3.2
+textblob==0.18.0
+python-dotenv==1.0.1
+loguru==0.7.2

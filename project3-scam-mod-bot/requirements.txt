@@ -1,0 +1,6 @@
+# Verified: March 09, 2026 | Python 3.12
+discord.py==2.7.1
+anthropic==0.80.0
+python-dotenv==1.0.1
+regex==2024.11.6
+loguru==0.7.2

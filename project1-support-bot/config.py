@@ -1,0 +1,16 @@
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
+TELEGRAM_TOKEN = os.getenv("TELEGRAM_TOKEN")
+DISCORD_TOKEN = os.getenv("DISCORD_TOKEN")
+ANTHROPIC_API_KEY = os.getenv("ANTHROPIC_API_KEY")
+BOT_NAME = os.getenv("BOT_NAME", "SupportBot")
+HUMAN_MODERATOR_CHAT_ID = os.getenv("HUMAN_MODERATOR_CHAT_ID")
+
+# L3: Security limits
+MAX_USER_MESSAGE_LENGTH = 1000
+MAX_HISTORY_TURNS = 10
+RATE_LIMIT_MESSAGES = 5
+RATE_LIMIT_WINDOW_SECONDS = 60

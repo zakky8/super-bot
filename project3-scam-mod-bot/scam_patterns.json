@@ -1,0 +1,28 @@
+{
+  "high_risk_phrases": [
+    "send me your seed phrase",
+    "dm me for whitelist",
+    "connect your wallet to claim",
+    "limited time airdrop",
+    "guaranteed 100x",
+    "i am the admin",
+    "verify your wallet",
+    "free crypto giveaway",
+    "click here to claim",
+    "your wallet is compromised",
+    "enter your private key",
+    "secret alpha group",
+    "double your crypto",
+    "send eth to receive eth"
+  ],
+  "suspicious_domains": [
+    "bit.ly",
+    "tinyurl.com",
+    "wallet-verify.io",
+    "claim-airdrop.xyz",
+    "free-nft.io",
+    "metamask-support.com"
+  ],
+  "trusted_role_ids": [],
+  "wallet_regex": "0x[a-fA-F0-9]{40}"
+}

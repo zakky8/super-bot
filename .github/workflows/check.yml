@@ -1,0 +1,58 @@
+name: Code Quality
+on: [push, pull_request]
+jobs:
+  syntax-project1:
+    name: Project 1 — Support Bot
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install -r project1-support-bot/requirements.txt
+      - run: |
+          cd project1-support-bot
+          python -m py_compile config.py rate_limiter.py ai_engine.py telegram_bot.py discord_bot.py main.py
+          echo "Project 1: All files OK"
+
+  syntax-project3:
+    name: Project 3 — Scam Mod Bot
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install -r project3-scam-mod-bot/requirements.txt
+      - run: |
+          cd project3-scam-mod-bot
+          python -m py_compile config.py pattern_detector.py ai_classifier.py discord_mod.py
+          echo "Project 3: All files OK"
+
+  syntax-project4:
+    name: Project 4 — Ticket Classifier
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install -r project4-ticket-classifier/requirements.txt
+      - run: |
+          cd project4-ticket-classifier
+          python -m py_compile setup.py train_model.py app.py
+          echo "Project 4: All files OK"
+
+  syntax-project5:
+    name: Project 5 — Sentiment Tracker
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install -r project5-sentiment-tracker/requirements.txt
+      - run: |
+          cd project5-sentiment-tracker
+          python -m py_compile config.py reddit_scraper.py sentiment_analyzer.py price_fetcher.py dashboard.py setup.py
+          echo "Project 5: All files OK"

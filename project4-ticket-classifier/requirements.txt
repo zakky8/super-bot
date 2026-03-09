@@ -1,0 +1,10 @@
+# Verified: March 09, 2026 | Python 3.12 (3.10 minimum — scikit-learn 1.7+ requirement)
+sentence-transformers==5.2.3
+scikit-learn==1.8.0
+pandas==2.2.3
+numpy==2.0.0
+streamlit==1.55.0
+joblib==1.4.2
+loguru==0.7.2
+torch==2.5.1
+nltk==3.9.1

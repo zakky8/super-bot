@@ -1,0 +1,17 @@
+description,category
+I cannot log into my account after resetting my password,account_access
+My withdrawal has been pending for 3 days with no update,withdrawal_issue
+I cannot deposit funds via bank transfer — it keeps failing,deposit_issue
+My KYC verification was rejected but my documents are valid,kyc_verification
+I keep getting a margin call error when placing trades,trading_problem
+MetaMask will not connect to the platform,wallet_connection
+Someone sent me a fake support DM and stole my funds,scam_report
+How do I change the email address on my account,general_inquiry
+Account is locked after too many failed login attempts,account_access
+My USDT withdrawal shows confirmed on chain but funds not arrived,withdrawal_issue
+I uploaded my passport but verification is still pending after 5 days,kyc_verification
+I received a phishing link in the community chat from a fake admin,scam_report
+What are the maker and taker trading fees,general_inquiry
+I am getting a wallet connection timeout error on Chrome,wallet_connection
+My deposit has not reflected after 2 hours,deposit_issue
+I placed a stop loss order but it did not execute,trading_problem
