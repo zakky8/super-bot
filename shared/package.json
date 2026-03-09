@@ -10,7 +10,7 @@
         "test": "npx jest"
     },
     "dependencies": {
-        "@openrouter/sdk": "*",
+        "@anthropic-ai/sdk": "^0.37.0",
         "ioredis": "^5.3.0",
         "ollama": "^0.5.0",
         "pg": "^8.11.0",

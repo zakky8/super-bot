@@ -2,37 +2,9 @@ name: Code Quality
 on: [push, pull_request]
 
 jobs:
-  # ── Python: Project 1 — AI Support Bot ────────────────────────────────────
-  python-check:
-    name: Project 1 — Support Bot (Python 3.12)
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '3.12'
-
-      - name: Cache pip
-        uses: actions/cache@v4
-        with:
-          path: ~/.cache/pip
-          key: pip-p1-${{ hashFiles('project1-support-bot/requirements.txt') }}
-          restore-keys: pip-p1-
-
-      - name: Install dependencies
-        run: pip install -r project1-support-bot/requirements.txt
-
-      - name: Syntax check all Python files
-        run: |
-          cd project1-support-bot
-          python -m py_compile config.py rate_limiter.py ai_engine.py \
-            telegram_bot.py discord_bot.py main.py
-          echo "All Python files OK"
-
-  # ── Node.js: TypeScript type-check (shared → telegram → discord) ──────────
+  # ── Node.js: shared → telegram-bot → discord-bot ──────────────────────────
   node-check:
-    name: Telegram + Discord Bots (TypeScript)
+    name: TypeScript type-check (shared → telegram → discord)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -41,8 +13,8 @@ jobs:
         with:
           node-version: '18'
 
-      # shared must be built first — both bots reference it via tsconfig
-      - name: Cache shared node_modules
+      # shared must be built first — both bots reference it via tsconfig project references
+      - name: Cache shared/node_modules
         uses: actions/cache@v4
         with:
           path: shared/node_modules
@@ -56,7 +28,7 @@ jobs:
           npm run build
 
       # Telegram bot
-      - name: Cache telegram-bot node_modules
+      - name: Cache telegram-bot/node_modules
         uses: actions/cache@v4
         with:
           path: telegram-bot/node_modules
@@ -70,7 +42,7 @@ jobs:
         run: cd telegram-bot && npx tsc --noEmit
 
       # Discord bot
-      - name: Cache discord-bot node_modules
+      - name: Cache discord-bot/node_modules
         uses: actions/cache@v4
         with:
           path: discord-bot/node_modules

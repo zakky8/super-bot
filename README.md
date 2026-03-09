@@ -1,242 +1,218 @@
 # Super Bot — Advanced Multi-Platform Bot System
 
-> A production-ready, multi-language bot system combining a **Node.js/TypeScript** community management suite (Telegram + Discord) with a **Python AI upgrade** powered by Claude AI. The Node.js system handles 159 commands for moderation, leveling, and engagement. The Python AI module adds intelligent support automation.
+> Production-ready multi-platform bot system for **Telegram** and **Discord** — combining 159 moderation/management commands with **Claude AI** support automation. Both bots share a single Anthropic-powered AI service with FAQ-based answers, prompt-injection protection, conversation memory, and human escalation.
 
-![Node.js](https://img.shields.io/badge/Node.js-18+-green) ![TypeScript](https://img.shields.io/badge/TypeScript-5.x-blue) ![Python](https://img.shields.io/badge/Python-3.12-blue) ![Claude AI](https://img.shields.io/badge/Claude-claude--sonnet--4--6-orange)
-
----
-
-## What's in This Repo
-
-| Component | Language | Description |
-|-----------|----------|-------------|
-| `telegram-bot/` | TypeScript | 104-command Telegram bot (MissRose feature parity) |
-| `discord-bot/` | TypeScript | 55-command Discord bot (MEE6 feature parity) |
-| `shared/` | TypeScript | Shared DB schema, models, AI service |
-| `project1-support-bot/` | Python 3.12 | AI-powered support bot upgrade (Claude AI) |
+![TypeScript](https://img.shields.io/badge/TypeScript-5.x-blue) ![Node.js](https://img.shields.io/badge/Node.js-18+-green) ![Claude AI](https://img.shields.io/badge/Claude-claude--sonnet--4--6-orange)
 
 ---
 
-## Node.js Bot System
+## Repository Structure
 
-### Telegram Bot — 104 Commands
+```
+super-bot/
+├── telegram-bot/          # 104-command Telegram bot (Grammy / TypeScript)
+├── discord-bot/           # 55-command Discord bot (Discord.js / TypeScript)
+├── shared/                # Shared AI service, DB models, Redis utils
+├── faq_data.json          # FAQ knowledge base for Claude AI answers
+├── docker-compose.yml     # Full stack (bots + Postgres + Redis + Ollama)
+└── ecosystem.config.js    # PM2 process config
+```
 
-Built with **Grammy** framework. Full MissRose feature parity.
+---
 
-| Module | Commands | What it does |
-|--------|----------|--------------|
-| Moderation | 22 | Ban, kick, mute, warn, purge — with silent and timed variants |
-| Admin Management | 11 | Promote, demote, group config, log channel |
-| Anti-Spam | 17 | Locks, flood protection, blacklist, CAPTCHA, anti-raid |
-| Greetings | 10 | Welcome/goodbye with custom messages and verification |
-| Content Management | 13 | Notes, filters, rules with media support |
-| Federation System | 15 | Multi-group ban management |
-| Utilities | 11 | Info, stats, connections |
+## AI System — Anthropic Claude (Integrated)
+
+Both bots use the **same upgraded AI service** in `shared/src/services/ai/AIService.ts`.
+
+| Feature | How it works |
+|---------|-------------|
+| **Claude AI** | Primary provider via `@anthropic-ai/sdk`. Reads `ANTHROPIC_API_KEY` |
+| **FAQ-based answers** | Loads `faq_data.json` and builds a system prompt. AI only answers from the FAQ |
+| **Prompt injection guard** | 8 blocked phrases — attempts are logged and replaced with a safe message |
+| **Human escalation** | When AI cannot answer it returns `ESCALATE` → bot notifies the moderator |
+| **Conversation memory** | Last 10 turns stored in Redis per user (falls back to in-memory) |
+| **Rate limiting** | 20 requests per hour per user (Redis-backed) |
+| **Ollama fallback** | If Anthropic API fails, auto-falls back to local Ollama model |
+
+### AI Commands
+
+**Telegram:**
+
+| Command | Description |
+|---------|-------------|
+| `/chat <message>` | Ask the Claude AI anything |
+| `/chat clear` | Reset conversation history |
+| `/ask <question>` | Alias for `/chat` |
+| `/support <issue>` | Escalate directly to a human moderator |
+| `/aisetup` | Configure API key, model, test connection, reload FAQ |
+
+**Discord:**
+
+| Command | Description |
+|---------|-------------|
+| `/chat message:<text>` | Ask the Claude AI |
+| `/chat clear:true` | Reset conversation history |
+
+### AI Quick Setup
+
+1. Get your API key at [console.anthropic.com](https://console.anthropic.com/)
+2. Add to `.env`:
+   ```env
+   ANTHROPIC_API_KEY=sk-ant-...
+   ANTHROPIC_MODEL=claude-sonnet-4-6
+   BOT_NAME=SupportBot
+   HUMAN_MODERATOR_CHAT_ID=<telegram_id>   # optional
+   HUMAN_MODERATOR_CHANNEL=<discord_channel_id>  # optional
+   ```
+3. Edit `faq_data.json` with your Q&A pairs
+4. Start the bots — Claude AI is active immediately
+
+---
+
+## Telegram Bot — 104 Commands
+
+Built with **Grammy**. Full MissRose feature parity.
+
+| Module | Commands | Description |
+|--------|----------|-------------|
+| Moderation | 22 | Ban, kick, mute, warn, purge (silent + timed variants) |
+| Admin | 11 | Promote, demote, group config, log channel |
+| Anti-Spam | 17 | Locks, flood control, blacklist, CAPTCHA, anti-raid |
+| Greetings | 10 | Welcome/goodbye with custom messages and mute-on-join |
+| Content | 13 | Notes, filters, rules with media support |
+| Federation | 15 | Multi-group cross-ban system |
+| Utilities | 11 | Info, stats, connection management |
+| AI | 3 | `/chat`, `/ask`, `/support` |
 | Fun | 5 | hug, pat, slap, roll, runs |
 
-### Discord Bot — 55 Commands
+---
+
+## Discord Bot — 55 Commands
 
 Built with **Discord.js**. Full MEE6 feature parity.
 
-| Module | Commands | What it does |
-|--------|----------|--------------|
-| Moderation | 16 | Ban, kick, mute, timeout, warn, purge with logging |
-| Leveling System | 12 | XP, ranks, leaderboards, role rewards, multipliers |
-| Custom Commands | 5 | User-defined commands with variable substitution |
-| Reaction Roles | 4 | Self-assignable roles via emoji reactions |
+| Module | Commands | Description |
+|--------|----------|-------------|
+| Moderation | 16 | Ban, kick, timeout, warn, purge, lockdown with log channel |
+| Leveling | 12 | XP, ranks, leaderboards, role rewards, multipliers |
+| Custom Commands | 5 | User-defined commands |
+| Reaction Roles | 4 | Self-assignable roles via emoji |
 | Engagement | 7 | Polls, giveaways, reminders, birthdays |
-| Social Integration | 4 | Twitch, YouTube, Twitter, Reddit notifications |
-| Utilities | 7 | Server info, user info, avatar, ping, role info |
-
-### Node.js Quick Start
-
-**Prerequisites:** Node.js 18+, PostgreSQL 14+, Redis 6+, pnpm
-
-```bash
-# Install dependencies
-cd telegram-bot && pnpm install
-cd ../discord-bot && pnpm install
-
-# Configure
-cp telegram-bot/.env.example telegram-bot/.env
-cp discord-bot/.env.example discord-bot/.env
-
-# Setup database
-psql -U postgres -f scripts/init-db.sql
-
-# Start (development)
-cd telegram-bot && pnpm run dev
-cd discord-bot && pnpm run dev
-```
-
-See `docs/installation/` for VPS and Docker deployment guides.
+| Social | 4 | Twitch, YouTube, Twitter, Reddit alerts |
+| Utilities | 7 | Server/user info, avatar, ping |
+| AI | 1 | `/chat` |
 
 ---
 
-## Python AI Upgrade — Project 1
+## Quick Start
 
-`project1-support-bot/` is a production-ready **AI-powered support bot** built in Python that adds intelligent FAQ answering, prompt injection protection, and human escalation on top of the existing bot system. It runs on both **Telegram** and **Discord** from a single codebase.
+### Prerequisites
+- Node.js 18+
+- PostgreSQL 14+
+- Redis 6+
 
-### What Project 1 Does
-
-When a user sends a support message:
-
-1. **Rate limit** — 5 messages per 60 seconds per user (sliding window, in-memory)
-2. **Sanitize** — 8 prompt injection patterns blocked before reaching Claude AI
-3. **AI answer** — Claude reads your `faq_data.json` and answers from it
-4. **Escalate** — if Claude cannot answer, it notifies your human moderator
-
-### Project 1 Quick Start
-
-**Prerequisites:** Python 3.12, Anthropic API key, Telegram and/or Discord bot token
+### Setup
 
 ```bash
-cd project1-support-bot
-pip install -r requirements.txt
+# Clone and install
+git clone https://github.com/zakky8/super-bot.git
+cd super-bot
+
+# Install all dependencies
+npm run install:all
+
+# Configure environment
 cp .env.example .env
-# Fill in: TELEGRAM_TOKEN, DISCORD_TOKEN, ANTHROPIC_API_KEY
-python main.py telegram    # or: python main.py discord
+# Edit .env — fill ANTHROPIC_API_KEY, BOT tokens, DATABASE_URL, REDIS_URL
+
+# Build
+npm run build
+
+# Start (development)
+npm run dev:telegram
+npm run dev:discord
+
+# Start (production via PM2)
+pm2 start ecosystem.config.js
 ```
 
-### Project 1 Features
+### Docker (full stack)
 
-| Feature | Details |
-|---------|---------|
-| Dual-platform | Telegram (aiogram 3.26) + Discord (discord.py 2.7) — one codebase |
-| Claude AI answers | `claude-sonnet-4-6` answers from your custom `faq_data.json` |
-| Prompt injection guard | Detects and blocks 8 known injection phrases |
-| Per-user rate limiting | 5 messages / 60 seconds sliding window |
-| Conversation history | Last 10 turns kept per user |
-| Human escalation | Unresolvable tickets forwarded to moderator automatically |
-| Singleton AI client | One `anthropic.Anthropic()` for the entire process |
-| Graceful shutdown | SIGTERM/SIGINT handled cleanly — Railway compatible |
+```bash
+cp .env.example .env
+# Fill in .env values
 
-### Project 1 Environment Variables
+docker-compose up -d
+# Starts: telegram-bot, discord-bot, postgres, redis, ollama
+```
+
+---
+
+## Environment Variables
 
 | Variable | Required | Description |
 |----------|----------|-------------|
-| `TELEGRAM_TOKEN` | For Telegram | Token from @BotFather |
-| `DISCORD_TOKEN` | For Discord | Token from Discord Developer Portal |
-| `ANTHROPIC_API_KEY` | Yes | Anthropic API key |
-| `BOT_NAME` | No (default: SupportBot) | Name used in AI responses |
-| `HUMAN_MODERATOR_CHAT_ID` | No | Telegram chat ID for escalations |
-
-See `project1-support-bot/README.md` for full documentation.
+| `ANTHROPIC_API_KEY` | Yes | Anthropic API key — [get one here](https://console.anthropic.com/) |
+| `ANTHROPIC_MODEL` | No | Claude model (default: `claude-sonnet-4-6`) |
+| `BOT_NAME` | No | AI assistant name in responses (default: `SupportBot`) |
+| `TELEGRAM_BOT_TOKEN` | Yes | From [@BotFather](https://t.me/BotFather) |
+| `DISCORD_BOT_TOKEN` | Yes | From [Discord Developer Portal](https://discord.com/developers) |
+| `DISCORD_CLIENT_ID` | Yes | Discord application client ID |
+| `DATABASE_URL` | Yes | PostgreSQL connection string |
+| `REDIS_URL` | No | Redis URL (defaults to in-memory fallback) |
+| `HUMAN_MODERATOR_CHAT_ID` | No | Telegram chat ID for escalation alerts |
+| `HUMAN_MODERATOR_CHANNEL` | No | Discord channel ID for escalation alerts |
+| `OLLAMA_HOST` | No | Ollama host for local AI fallback |
 
 ---
 
-## Node.js Configuration
+## FAQ Knowledge Base
 
-### Telegram Bot
+Edit `faq_data.json` to customise what the AI knows:
 
-```env
-BOT_TOKEN=your_telegram_bot_token
-DATABASE_URL=postgresql://botuser:password@localhost:5432/bot_system
-REDIS_URL=redis://:password@localhost:6379
-LOG_LEVEL=info
-ADMIN_IDS=123456789,987654321
-OPENROUTER_API_KEY=sk_your_key        # optional AI chat
-OPENROUTER_MODEL=anthropic/claude-3-haiku
+```json
+[
+  { "q": "How do I reset my password?", "a": "Click 'Forgot Password' on the login page." },
+  { "q": "What are the trading fees?", "a": "0.1% per trade. VIP members get reduced fees." }
+]
 ```
 
-### Discord Bot
-
-```env
-BOT_TOKEN=your_discord_bot_token
-CLIENT_ID=your_client_id
-DATABASE_URL=postgresql://botuser:password@localhost:5432/bot_system
-REDIS_URL=redis://:password@localhost:6379
-LOG_LEVEL=info
-OPENROUTER_API_KEY=sk_your_key        # optional AI chat
-OPENROUTER_MODEL=anthropic/claude-3-haiku
-```
+Reload without restarting: `/aisetup faq` (Telegram)
 
 ---
 
 ## Architecture
 
 ```
-super-bot/
-├── telegram-bot/          TypeScript Telegram bot (Grammy)
-│   ├── src/commands/      104 commands across 8 modules
-│   ├── src/handlers/      Message and event handlers
-│   ├── src/middlewares/   Auth, rate limiting, logging
-│   └── src/core/          Database, Redis, AI service
-├── discord-bot/           TypeScript Discord bot (Discord.js)
-│   ├── src/commands/      55 slash commands across 7 modules
-│   ├── src/events/        Discord gateway event listeners
-│   └── src/core/          Bot core and database
-├── shared/                Shared TypeScript resources
-│   ├── database/          PostgreSQL schema + migrations
-│   └── services/ai/       OpenRouter AI service
-├── project1-support-bot/  Python AI support bot (Claude AI)
-│   ├── telegram_bot.py    aiogram 3.x handlers
-│   ├── discord_bot.py     discord.py 2.x handlers
-│   ├── ai_engine.py       Claude AI + FAQ + sanitizer
-│   └── rate_limiter.py    Per-user sliding window
-├── docs/                  Installation guides
-├── scripts/               DB init, migrations, deploy scripts
-└── docker-compose.yml     Full stack Docker setup
+┌─────────────────────────────────────────────────┐
+│               telegram-bot (Grammy)              │
+│  104 commands │ /chat /ask /support /aisetup     │
+└────────────────────────┬────────────────────────┘
+                         │ imports
+┌────────────────────────▼────────────────────────┐
+│              shared / AIService                  │
+│  Anthropic SDK • FAQ loader • Injection guard    │
+│  Escalation • Redis memory • Ollama fallback     │
+└────────────────────────┬────────────────────────┘
+                         │ imports
+┌────────────────────────▼────────────────────────┐
+│             discord-bot (Discord.js)             │
+│  55 commands │ /chat (slash command)             │
+└─────────────────────────────────────────────────┘
 ```
-
----
-
-## Deployment
-
-| Component | Platform | Cost |
-|-----------|----------|------|
-| Node.js bots | Railway / VPS / Docker | $5/month (Railway Hobby) |
-| Python AI bot | Railway / VPS / Docker | $5/month (Railway Hobby) |
-| Database | PostgreSQL on Railway or self-hosted | Included or $0 self-hosted |
-| Cache | Redis on Railway or self-hosted | Included or $0 self-hosted |
-
-### Docker (full stack)
-
-```bash
-cp .env.example .env      # fill in all credentials
-docker-compose up -d      # starts telegram, discord, postgres, redis
-docker-compose logs -f    # tail all logs
-```
-
-### VPS with PM2
-
-```bash
-# Node.js bots
-pm2 start ecosystem.config.js
-pm2 save && pm2 startup
-
-# Python AI bot
-cd project1-support-bot
-pm2 start "python main.py telegram" --name ai-support-telegram
-pm2 start "python main.py discord" --name ai-support-discord
-pm2 save
-```
-
----
-
-## Security
-
-- Input validation and sanitization on all commands
-- Rate limiting: 100 req/min per user (Node.js), 5 msg/60s per user (Python AI bot)
-- Permission-based access control — admin commands check role before executing
-- SQL injection prevention via parameterized queries
-- Prompt injection detection and blocking (Python AI bot)
-- All AI failure paths return ESCALATE — raw errors never shown to users
-- No secrets committed — `.env.example` provided for every component
-- Audit logging for all moderation actions
 
 ---
 
 ## Related Repositories
 
-| Repo | Contents |
-|------|----------|
-| [zakky8/Auto-Moderation](https://github.com/zakky8/Auto-Moderation) | Standalone scam detection bot for Discord |
-| [zakky8/Support-Ticket-Classifier](https://github.com/zakky8/Support-Ticket-Classifier) | Streamlit ML ticket classifier |
-| [zakky8/Crypto-Sentiment-Tracker](https://github.com/zakky8/Crypto-Sentiment-Tracker) | Live Reddit sentiment + CoinGecko dashboard |
+| Repo | Description |
+|------|-------------|
+| [zakky8/Auto-Moderation](https://github.com/zakky8/Auto-Moderation) | Standalone AI scam detection moderation bot |
+| [zakky8/Support-Ticket-Classifier](https://github.com/zakky8/Support-Ticket-Classifier) | ML-powered ticket routing dashboard |
+| [zakky8/Crypto-Sentiment-Tracker](https://github.com/zakky8/Crypto-Sentiment-Tracker) | Real-time Reddit + price sentiment tracker |
 
 ---
 
 ## License
 
-MIT License
+MIT

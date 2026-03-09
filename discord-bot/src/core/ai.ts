@@ -15,6 +15,8 @@ if (process.env.REDIS_URL) {
 }
 
 export const aiService = new AIService({
-    openrouterApiKey: process.env.OPENROUTER_API_KEY,
-    defaultModel: process.env.OPENROUTER_MODEL || 'anthropic/claude-3-haiku',
+    anthropicApiKey:  process.env.ANTHROPIC_API_KEY         || '',
+    defaultModel:     process.env.ANTHROPIC_MODEL           || 'claude-sonnet-4-6',
+    botName:          process.env.BOT_NAME                  || 'SupportBot',
+    escalationUserId: process.env.HUMAN_MODERATOR_CHANNEL   || '',
 }, redisClient, logger);
